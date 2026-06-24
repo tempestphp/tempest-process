@@ -46,7 +46,7 @@ final class ProcessTester
     {
         $this->recordProcessExecutions();
 
-        $this->executor?->mocks[$command] = $result;
+        $this->executor->mocks[$command] = $result;
 
         return $this;
     }
@@ -61,7 +61,7 @@ final class ProcessTester
         $this->recordProcessExecutions();
 
         foreach ($results as $command => $result) {
-            $this->executor?->mocks[$command] = $result;
+            $this->executor->mocks[$command] = $result;
         }
 
         return $this;
@@ -110,7 +110,7 @@ final class ProcessTester
     {
         $this->ensureTestingSetUp();
 
-        throw new RuntimeException(var_export($this->executor?->executions, true));
+        throw new RuntimeException(var_export($this->executor->executions, true));
     }
 
     /**
@@ -165,7 +165,7 @@ final class ProcessTester
     {
         $this->ensureTestingSetUp();
 
-        foreach ($this->executor?->executions as $executions) {
+        foreach ($this->executor->executions as $executions) {
             foreach ($executions as [$process, $result]) {
                 $assertion = $callback($process, $result);
 
@@ -194,7 +194,7 @@ final class ProcessTester
         $this->ensureTestingSetUp();
 
         if ($command instanceof Closure) {
-            foreach ($this->executor?->executions as $executions) {
+            foreach ($this->executor->executions as $executions) {
                 foreach ($executions as [$process, $result]) {
                     $assertion = $command($process, $result);
 
@@ -227,7 +227,7 @@ final class ProcessTester
         $this->ensureTestingSetUp();
 
         Assert::assertEmpty(
-            actual: $this->executor?->executions,
+            actual: $this->executor->executions,
             message: 'Expected no processes to be executed, but some were.',
         );
 
@@ -245,7 +245,7 @@ final class ProcessTester
 
         if ($command instanceof Closure) {
             $count = 0;
-            foreach ($this->executor?->executions as $executions) {
+            foreach ($this->executor->executions as $executions) {
                 foreach ($executions as [$process, $result]) {
                     if ($command($process, $result) !== true) {
                         continue;
@@ -276,7 +276,7 @@ final class ProcessTester
 
         $executions = [];
 
-        foreach ($this->executor?->executions as $command => $commandExecutions) {
+        foreach ($this->executor->executions as $command => $commandExecutions) {
             if (! $this->executor->commandMatchesPattern($command, $pattern)) {
                 continue;
             }

@@ -48,7 +48,7 @@ final class GenericProcessExecutor implements ProcessExecutor
     {
         $process = is_iterable($pending->command)
             ? new SymfonyProcess($pending->command, env: $pending->environment)
-            : SymfonyProcess::fromShellCommandline( $pending->command, env: $pending->environment);
+            : SymfonyProcess::fromShellCommandline((string) $pending->command, env: $pending->environment);
 
         $process->setWorkingDirectory((string) ($pending->path ?? getcwd()));
         $process->setTimeout($pending->timeout?->getTotalSeconds());
