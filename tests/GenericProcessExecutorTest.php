@@ -43,7 +43,7 @@ final class GenericProcessExecutorTest extends TestCase
     public function start(): void
     {
         $executor = new GenericProcessExecutor();
-        $process = $executor->start('echo hello');
+        $process = $executor->start('"' . PHP_BINARY . '" -r "usleep(500000); echo \'hello\';"');
 
         $this->assertIsInt($process->pid);
         $this->assertTrue($process->running);
@@ -54,10 +54,10 @@ final class GenericProcessExecutorTest extends TestCase
 
         $this->assertNull($process->pid);
         $this->assertFalse($process->running);
-        $this->assertStringEqualsStringIgnoringLineEndings("hello\n", $process->output);
+        $this->assertSame('hello', $process->output);
         $this->assertSame('', $process->errorOutput);
 
-        $this->assertStringEqualsStringIgnoringLineEndings("hello\n", $result->output);
+        $this->assertSame('hello', $result->output);
         $this->assertSame('', $result->errorOutput);
         $this->assertSame(0, $result->exitCode);
     }
@@ -66,7 +66,7 @@ final class GenericProcessExecutorTest extends TestCase
     public function wait_callback(): void
     {
         $executor = new GenericProcessExecutor();
-        $process = $executor->start('echo hello');
+        $process = $executor->start('"' . PHP_BINARY . '" -r "usleep(500000); echo \'hello\';"');
 
         $output = [];
         $process->wait(function (OutputChannel $channel, string $data) use (&$output) {
@@ -76,7 +76,7 @@ final class GenericProcessExecutorTest extends TestCase
 
         $this->assertCount(1, $output);
         $this->assertArrayHasKey(OutputChannel::OUTPUT->value, $output);
-        $this->assertStringEqualsStringIgnoringLineEndings("hello\n", $output[OutputChannel::OUTPUT->value][0]);
+        $this->assertSame('hello', $output[OutputChannel::OUTPUT->value][0]);
     }
 
     #[Test]
